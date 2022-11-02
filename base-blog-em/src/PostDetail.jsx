@@ -9,17 +9,16 @@ async function fetchComments(postId) {
 
 async function deletePost(postId) {
   const response = await fetch(
-    `https://jsonplaceholder.typicode.com/postId/${postId}`,
+    `https://jsonplaceholder.typicode.com/posts/${postId}`,
     { method: "DELETE" }
   );
   return response.json();
 }
 
 async function updatePost(postId) {
-  console.log(`updatePost ${postId}`)
   const response = await fetch(
-    `https://jsonplaceholder.typicode.com/postId/${postId}`,
-    { method: "DELETE", data: { title: "REACT QUERY FOREVER!!!!" } }
+    `https://jsonplaceholder.typicode.com/posts/${postId}`,
+    { method: "PATCH", data: { title: "REACT QUERY FOREVER!!!!" } }
   );
   return response.json();
 }
@@ -56,6 +55,16 @@ export function PostDetail({ post }) {
       {deleteMutation.isSuccess && (
         <p style={{color: 'green'}}>Post has (not) deleted</p>
       )}
+
+      {updateMutation.isError && (
+        <p style={{color: 'red'}}>Error updating post</p>
+      )}
+      {updateMutation.isLoading && (
+        <p style={{color: 'purple'}}>Updating de post</p>
+      )}
+      {updateMutation.isSuccess && (
+        <p style={{color: 'green'}}>Post has (not) updated</p>
+      )}      
 
       <p>{post.body}</p>
       <h4>Comments</h4>
