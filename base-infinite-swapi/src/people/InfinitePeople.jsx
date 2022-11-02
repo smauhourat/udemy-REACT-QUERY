@@ -9,18 +9,27 @@ const fetchUrl = async (url) => {
 };
 
 export function InfinitePeople() {
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+  const { data, fetchNextPage, hasNextPage, isLoading, isError, error, isFetching} = useInfiniteQuery(
     "sw-people",
     ({ pageParam = initialUrl }) => fetchUrl(pageParam),
     {
       getNextPageParam: (lastPage) => lastPage.next || undefined,
     }
   );
-  return <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
-      {data?.pages.map(pageData => {
-        return pageData.results.map(person => {
-          return  (<Person key={person.name} name={person.name} hairColor={person.hair_color} eyeColor={person.eye_color} />)
-        })
-      })}
-    </InfiniteScroll>;
+
+  if (isLoading) return <div className="loading">Loading...</div>
+  if (isError) return <div>Error!!! {error.toString()}</div>
+
+  return (
+    <>
+      {isFetching && <div className="loading">Loading...</div>}
+      <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
+        {data?.pages.map(pageData => {
+          return pageData.results.map(person => {
+            return  (<Person key={person.name} name={person.name} hairColor={person.hair_color} eyeColor={person.eye_color} />)
+          })
+        })}
+      </InfiniteScroll>
+    </>
+  );
 }
