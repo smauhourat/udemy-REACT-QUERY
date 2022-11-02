@@ -12,7 +12,14 @@ async function getTreatments(): Promise<Treatment[]> {
 }
 
 export function useTreatments(): Treatment[] {
+  const toast = useCustomToast();
+
   const fallback = [];
-  const { data = fallback } = useQuery(queryKeys.treatments, getTreatments);
+  const { data = fallback } = useQuery(queryKeys.treatments, getTreatments, {
+    onError: (error) => {
+      const title =
+        error instanceof Error ? error.message : 'error connecting to server';
+    },
+  });
   return data;
 }
