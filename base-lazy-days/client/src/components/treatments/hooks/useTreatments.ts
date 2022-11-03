@@ -19,6 +19,7 @@ export function useTreatments(): Treatment[] {
     onError: (error) => {
       const title =
         error instanceof Error ? error.message : 'error connecting to server';
+      toast({ title, status: 'error' });
     },
   });
   return data;
